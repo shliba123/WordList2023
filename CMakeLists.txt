@@ -1,7 +1,7 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.24.2)
 project(WordList2023)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 14)
 file(GLOB_RECURSE DIR_SRC "src/*.cpp")
 file(GLOB_RECURSE HDR_SRC "src/*.h")
 
