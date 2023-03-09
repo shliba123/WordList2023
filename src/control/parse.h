@@ -10,6 +10,7 @@
 #include <exception>
 #include <string>
 #include <stdexcept>
+#include "util.h"
 
 #define WRONG_PROBLEM 0
 #define COUNT_CHAINS 1

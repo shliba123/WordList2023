@@ -3,7 +3,6 @@
 //
 
 #include "parse.h"
-#include "util.h"
 
 std::tuple<int, int, int, int, bool, char *> parseParam(int argc, char *argv[])
 {

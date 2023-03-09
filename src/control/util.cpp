@@ -11,5 +11,5 @@ MyException::MyException(ErrorType errorType) :
 
 const char *MyException::what() const noexcept
 {
-    std::cerr << errorMap.find(errorType)->second << std::endl;
+    return errorMap.find(errorType)->second.c_str();
 }

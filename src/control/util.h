@@ -42,16 +42,17 @@ const static std::unordered_map<ErrorType, std::string> errorMap = {
     {FIRST_CHAR_DUPLICATE, "重复指定首字母！"},
     {ENABLE_LOOP_DUPLICATE, "重复指定有环参数!"},
     {NO_FILE_PATH, "参数中不存在文件路径!"},
-    {N_WORK_WITH_OTHER_PARAMETER, "-n参数不支持和其他参数共同使用!"},
+    {N_WORK_WITH_OTHER_PARAMETER, "-n 参数不支持和其他参数共同使用!"},
     {NO_WORK_ERROR, "未指定任务，请指定一个任务!"},
-    {WORD_NOT_AVAILABLE, "不存在符合要求的单词链"}
+    {WORD_NOT_AVAILABLE, "不存在符合要求的单词链"},
+    {FILE_NOT_FIND, "输入文件没有找到"}
 };
 
 class MyException : std::runtime_error
 {
 public:
     ErrorType errorType;
-    explicit MyException( ErrorType errorType);
-    const char * what() const noexcept override;
+    explicit MyException(ErrorType errorType);
+    const char *what() const noexcept override;
 };
 #endif // WORDLIST2023_UTIL_H
