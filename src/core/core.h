@@ -4,7 +4,7 @@
 
 #ifndef WORDLIST2023_CORE_H
 #define WORDLIST2023_CORE_H
-
+#include "graph.h"
 /**
  * 统计所有的单词链
  * @param words 单词数组
@@ -45,5 +45,7 @@ int getLongestWordChainWithLoop(char *words[], int wordsLen, char *result[],
 
 int getLongestWordChainWithoutLoop(char *words[], int wordsLen, char *result[],
                                    char head, char tail, char ban);
+
+void dfsChain(int, Graph *, int length, char *result[], int &chainCount, bool visit[], vector<char *> &chain);
 
 #endif // WORDLIST2023_CORE_H

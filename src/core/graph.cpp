@@ -85,7 +85,6 @@ void Graph::compressGraph()
             tarjan(v, visit, inStack, low, dfn, stack, color, top, dfnNum, sccNum);
         }
     }
-
 }
 
 void Graph::tarjan(int v, bool visit[], bool inStack[], int low[], int dfn[], int stack[], int color[],
@@ -94,16 +93,12 @@ void Graph::tarjan(int v, bool visit[], bool inStack[], int low[], int dfn[], in
     low[v] = dfn[v] = ++dfnNum;
     stack[++top] = v;
     visit[v] = inStack[v] = true;
-    for (auto& edge : vertexEdges[v])
-    {
+    for (auto &edge : vertexEdges[v]) {
         int target = edge->getTarget();
-        if (!visit[target])
-        {
+        if (!visit[target]) {
             tarjan(target, visit, inStack, low, dfn, stack, color, top, dfnNum, sccNum);
             low[v] = std::min(low[v], low[target]);
-        }
-        else if (inStack[target])
-        {
+        } else if (inStack[target]) {
             low[v] = std::min(low[v], low[target]);
         }
     }

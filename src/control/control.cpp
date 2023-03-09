@@ -4,6 +4,7 @@
 #include "iostream"
 #include "control.h"
 #include "io.h"
+#include "../core/core.h"
 
 using std::cout;
 using  std::get;
@@ -29,6 +30,11 @@ void control(int argc, char *argv[])
             cout << words[i] << endl;
         }
         cout << wordCount << endl;
+        char* result[10005];
+        auto resultLegth = countChains(words, wordCount, result);
+        for (int i = 0; i < resultLegth; ++i) {
+            cout << result[i] << std::endl;
+        }
     }
     catch (MyException &e)
     {

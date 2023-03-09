@@ -19,8 +19,9 @@ class Edge
 private:
     int source, target;
     int weight;
-    char* word;
+    char *word;
     int index;
+
 public:
     /**
      * 之所以采用不直观的方法，是因为坍缩后的图的节点是 scc 而非字母，所以需要额外指定
@@ -58,12 +59,13 @@ private:
     // 该图的 scc 集合
     vector<Graph *> sccs;
     // 主图，节点为 scc
-    Graph* hostGraph = nullptr;
+    Graph *hostGraph = nullptr;
+
 public:
     Graph(char *words[], int wordsLen);
-    void addEdge(int source, int target, char* word);
-    void addEdge(char* word);
-    void addSelfLoop(int source, char* word);
+    void addEdge(int source, int target, char *word);
+    void addEdge(char *word);
+    void addSelfLoop(int source, char *word);
     void addSelfLoop(char *word);
     /**
      * 对该图进行 tarjan scc 求解

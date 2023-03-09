@@ -13,96 +13,73 @@ std::tuple<int, int, int, int, bool, char *> parseParam(int argc, char *argv[])
     int ban = 0;
     bool allowLoop = false;
 
-    for (int i = 0; i < argc; i++)
-    {
-        if (isFilePath(argv[i]))
-        {
-            if (path != nullptr)
-            {
+    for (int i = 0; i < argc; i++) {
+        if (isFilePath(argv[i])) {
+            if (path != nullptr) {
                 throw MyException(MULTI_FILE_PATH);
-            }
-            else
-            {
+            } else {
                 path = argv[i];
             }
         }
         // 解析参数
-        else if (argv[i][0] == '-')
-        {
-            switch (argv[i][1])
-            {
+        else if (argv[i][0] == '-') {
+            switch (argv[i][1]) {
             case 'n':
-                if (problemType != WRONG_PROBLEM)
-                {
+                if (problemType != WRONG_PROBLEM) {
                     throw MyException(MULTI_FILE_PATH);
                 }
                 problemType = COUNT_CHAINS;
-                break ;
+                break;
 
             case 'w':
-                if (problemType != WRONG_PROBLEM)
-                {
+                if (problemType != WRONG_PROBLEM) {
                     throw MyException(MULTI_FILE_PATH);
                 }
                 problemType = MAX_CHAIN_WORD;
                 break;
 
             case 'c':
-                if (problemType != WRONG_PROBLEM)
-                {
+                if (problemType != WRONG_PROBLEM) {
                     throw MyException(MULTI_FILE_PATH);
                 }
                 problemType = MAX_CHAIN_CHAR;
                 break;
 
             case 'h':
-                if (i == argc - 1)
-                {
+                if (i == argc - 1) {
                     throw MyException(NO_CHAR_ERROR);
                 }
-                if (isParamAlpha(argv[++i]))
-                {
-                    head = (int) (unsigned char) argv[i][0];
-                }
-                else
-                {
+                if (isParamAlpha(argv[++i])) {
+                    head = (int)(unsigned char)argv[i][0];
+                } else {
                     throw MyException(NO_CHAR_ERROR);
                 }
                 break;
 
             case 't':
-                if (i == argc - 1)
-                {
+                if (i == argc - 1) {
                     throw MyException(NO_CHAR_ERROR);
                 }
-                if (isParamAlpha(argv[++i]))
-                {
-                    tail = (int) (unsigned char) argv[i][0];
-                }
-                else
-                {
+                if (isParamAlpha(argv[++i])) {
+                    tail = (int)(unsigned char)argv[i][0];
+                } else {
                     throw MyException(NO_CHAR_ERROR);
                 }
                 break;
 
             case 'j':
-                if (i == argc - 1)
-                {
+                if (i == argc - 1) {
                     throw MyException(NO_CHAR_ERROR);
                 }
-                if (isParamAlpha(argv[++i]))
-                {
-                    ban = (int) (unsigned char) argv[i][0];
-                }
-                else
-                {
+                if (isParamAlpha(argv[++i])) {
+                    ban = (int)(unsigned char)argv[i][0];
+                } else {
                     throw MyException(NO_CHAR_ERROR);
                 }
                 break;
 
             case 'r':
-                if (allowLoop)
-                {
+                if (allowLoop) {
                     throw MyException(ENABLE_LOOP_DUPLICATE);
                 }
                 allowLoop = true;
@@ -114,20 +91,16 @@ std::tuple<int, int, int, int, bool, char *> parseParam(int argc, char *argv[])
         }
     }
 
-    if (path == nullptr)
-    {
+    if (path == nullptr) {
         throw MyException(NO_FILE_PATH);
     }
-    if ((head > 0 || tail > 0 || ban > 0 || allowLoop) && (problemType == COUNT_CHAINS))
-    {
+    if ((head > 0 || tail > 0 || ban > 0 || allowLoop) && (problemType == COUNT_CHAINS)) {
         throw MyException(N_WORK_WITH_OTHER_PARAMETER);
     }
-    if (problemType == WRONG_PROBLEM)
-    {
+    if (problemType == WRONG_PROBLEM) {
         throw MyException(NO_WORK_ERROR);
     }
-    if (ban == head)
-    {
+    if (ban == head && ban != 0) {
         throw MyException(WORD_NOT_AVAILABLE);
     }
 
