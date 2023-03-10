@@ -5,6 +5,12 @@
 #ifndef WORDLIST2023_CORE_H
 #define WORDLIST2023_CORE_H
 
+#include "graph.h"
+#include "iostream"
+
+using std::cout;
+using std::endl;
+
 /**
  * 统计所有的单词链
  * @param words 单词数组
@@ -40,10 +46,83 @@ int getLongestWordChain(char *words[], int wordsLen, char *result[], char head, 
  */
 int getLongestCharChain(char *words[], int wordsLen, char *result[], char head, char tail, char ban, bool allowLoop);
 
-int getLongestWordChainWithLoop(char *words[], int wordsLen, char *result[],
-                                char head, char tail, char ban);
+namespace WordChain
+{
+    namespace Loop
+    {
+    /**
+     * 解决函数的主方法
+     */
+    int mainSolution(char *words[], int wordsLen, char *result[],
+                     char head, char tail, char ban);
 
-int getLongestWordChainWithoutLoop(char *words[], int wordsLen, char *result[],
-                                   char head, char tail, char ban);
+    /**
+     * dfs 的包装方法，用于对每个顶点进行 dfs
+     * @param rawGraph 初始图
+     * @param sccDistance 距离矩阵，记录着从两点间的最大距离（不考虑起点的自环）
+     */
+    void getSccDistance(Graph *rawGraph, int sccDistance[][MAX_VERTEX]);
+
+    /**
+     * dfs 本体函数
+     * @param scc 连通分量
+     * @param start 起始点
+     * @param cur 当前点
+     * @param step 已经走过的路径长度
+     * @param edgeVisit dfs visit 辅助数组
+     * @param vertexVisit 辅助数组，用于避免自环的重复计算
+     * @param sccDistance 距离矩阵，记录着从两点间的最大距离
+     */
+    void dfsSccDistance(Graph *scc, int start, int cur, int step,
+                        bool edgeVisit[], int vertexVisit[], int sccDistance[][MAX_VERTEX]);
+
+    /**
+     * dp 本体，需要先考虑 scc 内部 dfs 的成果和 hostGraph 的 topo dp
+     * @param head
+     * @param ban
+     * @param rawGraph
+     * @param sccDistance
+     * @param dp
+     * @param hostPreEdge hostPreEdge[v] = e 表示 v 这个节点的入边（路径入边）在 hostGraph 里的编号是 e
+     * @param sccPreVertex 记录着在 scc 内部，dfs 结果的前一个`节点`
+     * @return int 返回路径的最终节点的编号
+     */
+    int dpSolve(char head, char tail, char ban, Graph *rawGraph, int sccDistance[MAX_VERTEX][MAX_VERTEX],
+                int dp[], Edge* hostPreEdge[], int sccPreVertex[]);
+
+    int restoreChain(int cur, Edge* hostPreEdge[], const int sccPreVertex[], Graph *rawGraph,
+                     int sccDistance[][MAX_VERTEX], char *result[]);
+
+    /**
+     * 本质是根据约束条件再次进行一遍 dfs，直到找到满足条件的路径
+     * @param cur
+     * @param dest 路径的终点
+     * @param remain 剩余的路径长度
+     * @param subChain
+     * @return 搜索是否成功
+     */
+    bool restoreSubChain(Graph *scc, int cur, int dest, int remain,
+                         bool edgeVisit[], int vertexVisit[], list<char *> &subChain);
+    }
+    namespace NoLoop
+    {
+    int mainSolution(char *words[], int wordsLen, char *result[],
+                     char head, char tail, char ban);
+    }
+}
+
+namespace CharChain
+{
+    namespace Loop
+    {
+    int mainSolution(char *words[], int wordsLen, char *result[],
+                     char head, char tail, char ban);
+    }
+    namespace NoLoop
+    {
+    int mainSolution(char *words[], int wordsLen, char *result[],
+                     char head, char tail, char ban);
+    }
+}
 
 #endif // WORDLIST2023_CORE_H

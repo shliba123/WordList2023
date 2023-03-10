@@ -29,7 +29,7 @@
  *          4：allowLoop：允许环则为 true，否则为 false
  *          5：filePath：输入文件路径
  */
-std::tuple<int, int, int, int, bool, char*> parseParam(int argc, char *argv[]);
+std::tuple<int, char, char, char, bool, char *> parseParam(int argc, char *argv[]);
 
 /**
  * 判断输入的字符串是否是文件路径

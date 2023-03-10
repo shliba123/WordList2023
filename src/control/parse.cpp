@@ -4,13 +4,13 @@
 
 #include "parse.h"
 
-std::tuple<int, int, int, int, bool, char *> parseParam(int argc, char *argv[])
+std::tuple<int, char, char, char, bool, char *> parseParam(int argc, char *argv[])
 {
     char *path = nullptr;
     int problemType = WRONG_PROBLEM;
-    int head = 0;
-    int tail = 0;
-    int ban = 0;
+    char head = 0;
+    char tail = 0;
+    char ban = 0;
     bool allowLoop = false;
 
     for (int i = 0; i < argc; i++)
@@ -62,7 +62,7 @@ std::tuple<int, int, int, int, bool, char *> parseParam(int argc, char *argv[])
                 }
                 if (isParamAlpha(argv[++i]))
                 {
-                    head = (int) (unsigned char) argv[i][0];
+                    head = argv[i][0];
                 }
                 else
                 {
@@ -77,7 +77,7 @@ std::tuple<int, int, int, int, bool, char *> parseParam(int argc, char *argv[])
                 }
                 if (isParamAlpha(argv[++i]))
                 {
-                    tail = (int) (unsigned char) argv[i][0];
+                    tail = argv[i][0];
                 }
                 else
                 {
@@ -92,7 +92,7 @@ std::tuple<int, int, int, int, bool, char *> parseParam(int argc, char *argv[])
                 }
                 if (isParamAlpha(argv[++i]))
                 {
-                    ban = (int) (unsigned char) argv[i][0];
+                    ban = argv[i][0];
                 }
                 else
                 {
@@ -126,7 +126,7 @@ std::tuple<int, int, int, int, bool, char *> parseParam(int argc, char *argv[])
     {
         throw MyException(NO_WORK_ERROR);
     }
-    if (ban == head)
+    if (ban == head && ban != 0)
     {
         throw MyException(WORD_NOT_AVAILABLE);
     }
