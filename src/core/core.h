@@ -7,6 +7,7 @@
 
 #include "graph.h"
 #include "iostream"
+#include "../control/util.h"
 
 using std::cout;
 using std::endl;
@@ -89,7 +90,16 @@ namespace WordChain
      */
     int dpSolve(char head, char tail, char ban, Graph *rawGraph, int sccDistance[MAX_VERTEX][MAX_VERTEX],
                 int dp[], Edge* hostPreEdge[], int sccPreVertex[]);
-
+    /**
+     * 用于产生答案，其中用到了 dp 跟踪数组和 scc 的 dfs
+     * @param cur 当前节点
+     * @param hostPreEdge
+     * @param sccPreVertex
+     * @param rawGraph
+     * @param sccDistance
+     * @param result
+     * @return 单词链的中单词的个数
+     */
     int restoreChain(int cur, Edge* hostPreEdge[], const int sccPreVertex[], Graph *rawGraph,
                      int sccDistance[][MAX_VERTEX], char *result[]);
 
@@ -104,6 +114,7 @@ namespace WordChain
     bool restoreSubChain(Graph *scc, int cur, int dest, int remain,
                          bool edgeVisit[], int vertexVisit[], list<char *> &subChain);
     }
+
     namespace NoLoop
     {
     int mainSolution(char *words[], int wordsLen, char *result[],
@@ -117,9 +128,21 @@ namespace CharChain
     {
     int mainSolution(char *words[], int wordsLen, char *result[],
                      char head, char tail, char ban);
+    void getSccDistance(Graph *rawGraph, int sccDistance[][MAX_VERTEX]);
+    void dfsSccDistance(Graph *scc, int start, int cur, int step,
+                        bool edgeVisit[], int vertexVisit[], int sccDistance[][MAX_VERTEX]);
+    int dpSolve(char head, char tail, char ban, Graph *rawGraph, int sccDistance[30][30],
+                                 int dp[], Edge* hostPreEdge[], int sccPreVertex[]);
+    int restoreChain(int cur, Edge* hostPreEdge[], const int sccPreVertex[], Graph *rawGraph,
+                     int sccDistance[][MAX_VERTEX], char *result[]);
+    bool restoreSubChain(Graph *scc, int cur, int dest, int remain,
+                         bool edgeVisit[], int vertexVisit[], list<char *> &subChain);
     }
     namespace NoLoop
     {
+    /**
+     * 纠结允许有环时字母最长的单词链
+     */
     int mainSolution(char *words[], int wordsLen, char *result[],
                      char head, char tail, char ban);
     }

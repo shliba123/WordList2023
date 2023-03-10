@@ -10,6 +10,10 @@
 #include <stdexcept>
 #include <unordered_map>
 #include <iostream>
+
+// debug 的控制开关
+//#define DEBUG
+
 enum ErrorType
 {
     FILE_NOT_FIND = 1,

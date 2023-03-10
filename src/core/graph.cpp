@@ -137,15 +137,17 @@ void Graph::compressGraph()
             sccs[sccIndex[v]]->addSelfLoop(edge->getWord());
         }
     }
-// 打印 scc
-//    cout << "scc num: " << sccs.size() << endl;
-//    cout << "scc index: " << endl;
-//    for (int i = 0; i < ALPHA_SIZE; i++)
-//        printf("%4c", i + 'a');
-//    cout << endl;
-//    for (int i = 0; i < ALPHA_SIZE; i++)
-//        printf("%4d", sccIndex[i]);
-//    cout << endl;
+
+#ifdef DEBUG
+    cout << "scc num: " << sccs.size() << endl;
+    cout << "scc index: " << endl;
+    for (int i = 0; i < ALPHA_SIZE; i++)
+        printf("%4c", i + 'a');
+    cout << endl;
+    for (int i = 0; i < ALPHA_SIZE; i++)
+        printf("%4d", sccIndex[i]);
+    cout << endl;
+#endif
 }
 
 void Graph::tarjan(int v, bool *visit, bool *inStack, int *low, int *dfn, int *stack,
@@ -153,12 +155,6 @@ void Graph::tarjan(int v, bool *visit, bool *inStack, int *low, int *dfn, int *s
 {
     low[v] = dfn[v] = ++dfnNum;
     stack[++top] = v;
-
-//    for (int i = 1; i <= top; i++)
-//    {
-//        cout << (char) (stack[i] + 'a') << " ";
-//    }
-//    cout << endl;
 
     visit[v] = inStack[v] = true;
     for (auto& edge : vertexEdges[v])
@@ -231,6 +227,65 @@ void Graph::topoSort(int vertexNum, int *ans)
         throw MyException(HAVE_LOOP);
     }
 }
+
+void Graph::delSingleEdges()
+{
+    // inDegree 和 outDegree 数组，没有使用自带的 inDegree 是因为删边会导致 inDegree 更改
+    int ind[MAX_VERTEX] = {}, oud[MAX_VERTEX] = {};
+    // 更新获得所有的出入度
+    for (int i = 0; i < ALPHA_SIZE; i++)
+    {
+        for (auto& edge : vertexEdges[i])
+        {
+            int source = edge->getSource();
+            int target = edge->getTarget();
+            ind[target]++, oud[source]++;
+        }
+    }
+
+    // 以下操作是因为单词链必须具有两个以上的单词，这些边显然是只有一条边的
+    // 对于非自环边，孤立树边：边的起点、终点均没有自环，起点的入度为 0，终点的出度为 0
+    for (int i = 0; i < ALPHA_SIZE; i++)
+    {
+        auto begin = vertexEdges[i].begin();
+        auto end = vertexEdges[i].end();
+        for (auto iter = begin; iter != end;)
+        {
+            int source = (*iter)->getSource(), target = (*iter)->getTarget();
+            int sourceWeight = vertexWeight[source], targetWeight = vertexWeight[target];
+            if (!ind[source] && !oud[target] && !sourceWeight && !targetWeight)
+            {
+                iter = vertexEdges[i].erase(iter);
+            }
+            else
+            {
+                iter++;
+            }
+        }
+    }
+
+    // for a self-loop-edge, we delete it when ind[x] == 0 && oud[x] == 0 && point_weigh[x] == 1
+    // 孤立自环边：某个点只有一个自环，且该点入度、出度为 0
+    for (int i = 0; i < ALPHA_SIZE; i++)
+    {
+        auto begin = vertexSelfLoop[i].begin();
+        auto end = vertexSelfLoop[i].end();
+        for (auto iter = begin; iter != end;)
+        {
+            int source = (*iter)->getSource();
+            int sourceWeight = vertexWeight[source];
+            if (!ind[source] && !oud[source] && sourceWeight == 1)
+            {
+                iter = vertexSelfLoop->erase(iter);
+            }
+            else
+            {
+                iter++;
+            }
+        }
+    }
+}
+
 Graph *Graph::getHostGraph() const
 {
     return hostGraph;
@@ -256,12 +311,19 @@ int Graph::getVertexWeight(int v) const
 {
     return vertexWeight[v];
 }
+int Graph::getVertexCharWeight(int v) const
+{
+    return vertexCharWeight[v];
+}
 const int *Graph::getVertexWeights() const
 {
     return vertexWeight;
+}
+const int *Graph::getVertexCharWeights() const
+{
+    return vertexCharWeight;
 }
 const list<Edge *> *Graph::getVertexSelfLoop() const
 {
     return vertexSelfLoop;
 }
-

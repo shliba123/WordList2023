@@ -91,24 +91,25 @@ public:
      * @param ans 排序后的节点保存在这里
      */
     void topoSort(int vertexNum, int ans[]);
-
-    Graph *getHostGraph() const;
-
-    const vector<Graph *> &getSccs() const;
     /**
      * 获得该图中 scc 的数量
      * @return scc num
      */
     int getSccsNum() const;
+    /**
+     * 删掉“孤立边和自环”，因为在 CharWordLoop 中这种边有可能会导致最后的单词链只有一个单词，这与题义不符
+     */
+    void delSingleEdges();
 
+    Graph *getHostGraph() const;
     const int *getSccIndex() const;
-
     const list<Edge *> *getVertexEdges() const;
-
     int getVertexWeight(int v) const;
-
+    int getVertexCharWeight(int v) const;
     const int *getVertexWeights() const;
+    const int *getVertexCharWeights() const;
     const list<Edge *> *getVertexSelfLoop() const;
+    const vector<Graph *> &getSccs() const;
 };
 
 #endif // WORDLIST2023_GRAPH_H
