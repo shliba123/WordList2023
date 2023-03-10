@@ -1,0 +1,4 @@
+/Users/shliba/CLionProjects/WordList2023/gui/cmake-build-debug/CMakeFiles/gui.dir
+/Users/shliba/CLionProjects/WordList2023/gui/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/shliba/CLionProjects/WordList2023/gui/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/Users/shliba/CLionProjects/WordList2023/gui/cmake-build-debug/CMakeFiles/gui_autogen.dir
