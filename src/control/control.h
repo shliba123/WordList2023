@@ -6,6 +6,13 @@
 #define WORDLIST2023_CONTROL_H
 #include "parse.h"
 
+using std::cout;
+using  std::get;
+using std::endl;
+using std::cerr;
+
+const int MAX_WORD = 20100;
+
 /**
  * 控制主程序，用于控制参数解析，文件输入，核心计算，输出等多个部分
  * @param argc 参数数量

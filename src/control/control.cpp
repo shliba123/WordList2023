@@ -6,34 +6,45 @@
 #include "io.h"
 #include "../core/core.h"
 
-using std::cout;
-using  std::get;
-using std::endl;
-using std::cerr;
-
-const int MAX_WORD = 20100;
 char* words[MAX_WORD];
+char* result[MAX_WORD];
+
 void control(int argc, char *argv[])
 {
     try
     {
+        // 解析参数
         auto ans = parseParam(argc, argv);
-        cout << get<0>(ans) << " " << get<1>(ans) << " " << get<2>(ans) << " " << get<3>(ans) << " " << get<4>(ans) << " " << get<4>(ans) << " " << endl;
-        char *path = get<5>(ans);
         int problemType = get<0>(ans);
-        int head = get<1>(ans);
-        int tail = get<2>(ans);
-        int ban = get<3>(ans);
+        char head = get<1>(ans);
+        char tail = get<2>(ans);
+        char ban = get<3>(ans);
         bool allowLoop = get<4>(ans);
-        auto wordCount = readWords(path, words);
-        for (int i = 0; i < wordCount; ++i) {
-            cout << words[i] << endl;
+        char *path = get<5>(ans);
+
+        // 读取参数
+        int wordsLen = readWords(path, words);
+
+        int resultLen = 0;
+        int chainCnt = 0;
+        // 选择问题
+        switch (problemType)
+        {
+        case COUNT_CHAINS:
+            break;
+        case MAX_CHAIN_WORD:
+            resultLen = getLongestWordChain(words, wordsLen, result, head, tail, ban, allowLoop);
+            break;
+        case MAX_CHAIN_CHAR:
+            resultLen = getLongestCharChain(words, wordsLen, result, head, tail, ban, allowLoop);
+            break;
+        default:
+            break;
         }
-        cout << wordCount << endl;
-        char* result[10005];
-        auto resultLegth = countChains(words, wordCount, result);
-        for (int i = 0; i < resultLegth; ++i) {
-            cout << result[i] << std::endl;
+
+        for (int i = 0; i < resultLen; i++)
+        {
+            cout << result[i] << endl;
         }
     }
     catch (MyException &e)

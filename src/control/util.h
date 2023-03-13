@@ -10,6 +10,10 @@
 #include <stdexcept>
 #include <unordered_map>
 #include <iostream>
+
+// debug 的控制开关
+//#define DEBUG
+
 enum ErrorType
 {
     FILE_NOT_FIND = 1,
@@ -29,7 +33,8 @@ enum ErrorType
     ENABLE_LOOP_DUPLICATE,
     N_WORK_WITH_OTHER_PARAMETER,
     WORD_NOT_AVAILABLE,
-    HAVE_LOOP
+    HAVE_LOOP,
+
 };
 
 const static std::unordered_map<ErrorType, std::string> errorMap = {
@@ -45,7 +50,8 @@ const static std::unordered_map<ErrorType, std::string> errorMap = {
     {N_WORK_WITH_OTHER_PARAMETER, "-n 参数不支持和其他参数共同使用!"},
     {NO_WORK_ERROR, "未指定任务，请指定一个任务!"},
     {WORD_NOT_AVAILABLE, "不存在符合要求的单词链"},
-    {FILE_NOT_FIND, "输入文件没有找到"}
+    {FILE_NOT_FIND, "输入文件没有找到"},
+    {HAVE_LOOP, "无环图中有环"}
 };
 
 class MyException : std::runtime_error
