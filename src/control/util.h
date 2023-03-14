@@ -13,6 +13,8 @@
 
 // debug 的控制开关
 //#define DEBUG
+// 并行的控制开关
+#define PARALLEL
 
 enum ErrorType
 {
