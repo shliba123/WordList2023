@@ -89,7 +89,7 @@ namespace WordChain
      * @param sccPreVertex 记录着在 scc 内部，dfs 结果的前一个`节点`
      * @return int 返回路径的最终节点的编号
      */
-    int dpSolve(char head, char tail, char ban, Graph *rawGraph, int sccDistance[MAX_VERTEX][MAX_VERTEX],
+    int dpSolve(char head, char tail, Graph *rawGraph, int sccDistance[MAX_VERTEX][MAX_VERTEX],
                 int dp[], Edge* hostPreEdge[], int sccPreVertex[]);
     /**
      * 用于产生答案，其中用到了 dp 跟踪数组和 scc 的 dfs
@@ -120,6 +120,8 @@ namespace WordChain
     {
     int mainSolution(char *words[], int wordsLen, char *result[],
                      char head, char tail, char ban);
+    int dpSolve(char head, char tail, Graph *rawGraph, int dp[], Edge* preEdge[]);
+    int restoreChain(int cur, Edge* preEdge[], Graph *rawGraph, char *result[]);
     }
 }
 
@@ -132,7 +134,7 @@ namespace CharChain
     void getSccDistance(Graph *rawGraph, int sccDistance[][MAX_VERTEX]);
     void dfsSccDistance(Graph *scc, int start, int cur, int step,
                         bool edgeVisit[], int vertexVisit[], int sccDistance[][MAX_VERTEX]);
-    int dpSolve(char head, char tail, char ban, Graph *rawGraph, int sccDistance[30][30],
+    int dpSolve(char head, char tail, Graph *rawGraph, int sccDistance[30][30],
                                  int dp[], Edge* hostPreEdge[], int sccPreVertex[]);
     int restoreChain(int cur, Edge* hostPreEdge[], const int sccPreVertex[], Graph *rawGraph,
                      int sccDistance[][MAX_VERTEX], char *result[]);
@@ -146,6 +148,18 @@ namespace CharChain
      */
     int mainSolution(char *words[], int wordsLen, char *result[],
                      char head, char tail, char ban);
+    /**
+     * 相比于有环的时候必须考虑两个 pre，这次只有一个 pre
+     * @param head
+     * @param tail
+     * @param ban
+     * @param rawGraph
+     * @param dp
+     * @param preEdge
+     * @return
+     */
+    int dpSolve(char head, char tail, Graph *rawGraph, int dp[], Edge* preEdge[]);
+    int restoreChain(int cur, Edge* preEdge[], Graph *rawGraph, char *result[]);
     }
 }
 

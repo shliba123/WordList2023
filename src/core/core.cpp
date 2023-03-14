@@ -92,6 +92,8 @@ int WordChain::Loop::mainSolution(char *words[], int wordsLen, char *result[],
                                   char head, char tail, char ban)
 {
     auto rawGraph = new Graph(words, wordsLen);
+    // 删去 ban 的字符
+    rawGraph->delBannedEdges(ban);
     // 进行 scc 压缩
     rawGraph->compressGraph();
 
@@ -111,10 +113,11 @@ int WordChain::Loop::mainSolution(char *words[], int wordsLen, char *result[],
     memset(sccPreVertex, 255, sizeof(int) * MAX_VERTEX);
     Edge *hostPreEdge[MAX_VERTEX] = {nullptr};
     // dest 是最终路径终点的编号
-    int dest = dpSolve(head, tail, ban, rawGraph, sccDistance, dp, hostPreEdge, sccPreVertex);
+    int dest = dpSolve(head, tail, rawGraph, sccDistance, dp, hostPreEdge, sccPreVertex);
 
     // 根据 dest 和两个 pre 数组还原路径
     int resultLen = restoreChain(dest, hostPreEdge, sccPreVertex, rawGraph, sccDistance, result);
+    delete rawGraph;
     return resultLen;
 }
 
@@ -145,6 +148,24 @@ void WordChain::Loop::getSccDistance(Graph *rawGraph, int sccDistance[][MAX_VERT
             }
         }
     }
+    // 打印 sccDistance 表格
+#ifdef DEBUG
+    printf("    ");
+    for (int i = 0; i < ALPHA_SIZE; i++)
+    {
+        printf("%4c", i + 'a');
+    }
+    cout << endl;
+    for (int i = 0; i < ALPHA_SIZE; i++)
+    {
+        printf("%4c", i + 'a');
+        for (int j = 0; j < ALPHA_SIZE; j++)
+        {
+            printf("%4d", sccDistance[i][j]);
+        }
+        cout << endl;
+    }
+#endif
 }
 
 void WordChain::Loop::dfsSccDistance(Graph *scc, int start, int cur, int step,
@@ -168,7 +189,7 @@ void WordChain::Loop::dfsSccDistance(Graph *scc, int start, int cur, int step,
     vertexVisit[cur]--;
 }
 
-int WordChain::Loop::dpSolve(char head, char tail, char ban, Graph *rawGraph, int sccDistance[30][30],
+int WordChain::Loop::dpSolve(char head, char tail, Graph *rawGraph, int sccDistance[30][30],
                              int dp[], Edge *hostPreEdge[], int sccPreVertex[])
 {
     // 利用 weight 给 dpSolve 赋初值
@@ -186,11 +207,6 @@ int WordChain::Loop::dpSolve(char head, char tail, char ban, Graph *rawGraph, in
     {
         int x = head - 'a';
         dp[x] = weights[x];
-    }
-    // ban 掉的为负数
-    if (ban != 0)
-    {
-        dp[ban - 'a'] = -1;
     }
 
     // 对于 hostGraph 进行 topoSort 排序
@@ -440,7 +456,121 @@ bool WordChain::Loop::restoreSubChain(Graph *scc, int cur, int dest, int remain,
 int WordChain::NoLoop::mainSolution(char *words[], int wordsLen, char *result[],
                                     char head, char tail, char ban)
 {
-    return 0;
+    auto rawGraph = new Graph(words, wordsLen);
+    // 删除 ban 的单词
+    rawGraph->delBannedEdges(ban);
+
+    // dp
+    int dp[MAX_VERTEX];
+    memset(dp, 255, sizeof(dp));
+    Edge* preEdge[MAX_VERTEX] = {nullptr};
+    int dest = dpSolve(head, tail, rawGraph, dp, preEdge);
+
+    // 复原链路
+    int resultLen = restoreChain(dest, preEdge, rawGraph, result);
+    delete rawGraph;
+    if (resultLen <= 1)
+    {
+        throw MyException(WORD_NOT_AVAILABLE);
+    }
+    return resultLen;
+}
+
+int WordChain::NoLoop::dpSolve(char head, char tail, Graph *rawGraph, int dp[], Edge* preEdge[])
+{
+    // 进行拓扑排序，有两个作用，一个是检测是否有环，另一个是确定 dp 顺序
+    int topo[MAX_VERTEX];
+    rawGraph->topoSort(ALPHA_SIZE, topo);
+
+    // 利用 head 和 ban 确定 dp 起始点，利用 weight 给 dpSolve 赋初值
+    const int *weights = rawGraph->getVertexWeights();
+    if (head == 0)
+    {
+        for (int i = 0; i < ALPHA_SIZE; i++)
+        {
+            dp[i] = weights[i];
+        }
+    }
+    else
+    {
+        int x = head - 'a';
+        dp[x] = weights[x];
+    }
+
+    // 按照 topo 序 dp
+    for (int i = 0; i < ALPHA_SIZE; i++)
+    {
+        int v = topo[i];
+        if (dp[v] >= 0)
+        {
+            for (auto& edge : rawGraph->getVertexEdges()[v])
+            {
+                int target = edge->getTarget();
+                // targetWeight 是需要考虑的，因为自环并不算是，但是两个自环需要排除
+                int targetWeight = rawGraph->getVertexWeight(v);
+                if (dp[v] + targetWeight + 1 > dp[target])
+                {
+                    dp[target] = dp[v] + targetWeight + 1;
+                    preEdge[target] = edge;
+                }
+            }
+        }
+    }
+
+    int dest = 0;
+    if (tail == 0)
+    {
+        for (int i = 1; i < ALPHA_SIZE; i++)
+        {
+            if (dp[i] > dp[dest])
+            {
+                dest = i;
+            }
+        }
+    }
+    else
+    {
+        dest = tail - 'a';
+    }
+
+    return dest;
+}
+
+int WordChain::NoLoop::restoreChain(int cur, Edge* preEdge[], Graph *rawGraph, char *result[])
+{
+    vector<char *> chain;
+    // 普通的 dp 回溯
+    while (preEdge[cur] != nullptr)
+    {
+        int curWeight = rawGraph->getVertexWeight(cur);
+        if (curWeight > 0)
+        {
+            for (auto *loop : rawGraph->getVertexSelfLoop()[cur])
+            {
+                chain.push_back(loop->getWord());
+            }
+        }
+
+        auto edge = preEdge[cur];
+        chain.push_back(edge->getWord());
+        cur = edge->getWord()[0] - 'a';
+    }
+
+    if (rawGraph->getVertexWeight(cur) > 0)
+    {
+        for (auto *loop : rawGraph->getVertexSelfLoop()[cur])
+        {
+            chain.push_back(loop->getWord());
+        }
+    }
+
+    int i = 0;
+    for (auto iter = chain.rbegin(); iter != chain.rend(); iter++)
+    {
+        result[i++] = *iter;
+    }
+
+    return (int) chain.size();
 }
 
 /* ================================ */
@@ -449,6 +579,9 @@ int CharChain::Loop::mainSolution(char *words[], int wordsLen, char *result[],
                                   char head, char tail, char ban)
 {
     auto rawGraph = new Graph(words, wordsLen);
+    // 删除 ban 的单词
+    rawGraph->delBannedEdges(ban);
+
     // 删除孤立边和自环，避免干扰答案
     rawGraph->delSingleEdges();
 
@@ -471,10 +604,11 @@ int CharChain::Loop::mainSolution(char *words[], int wordsLen, char *result[],
     memset(sccPreVertex, 255, sizeof(int) * MAX_VERTEX);
     Edge *hostPreEdge[MAX_VERTEX] = {nullptr};
     // dest 是最终路径终点的编号
-    int dest = dpSolve(head, tail, ban, rawGraph, sccDistance, dp, hostPreEdge, sccPreVertex);
+    int dest = dpSolve(head, tail, rawGraph, sccDistance, dp, hostPreEdge, sccPreVertex);
 
     // 根据 dest 和两个 pre 数组还原路径
     int resultLen = restoreChain(dest, hostPreEdge, sccPreVertex, rawGraph, sccDistance, result);
+    delete rawGraph;
     return resultLen;
 }
 
@@ -549,7 +683,7 @@ void CharChain::Loop::dfsSccDistance(Graph *scc, int start, int cur, int step,
     vertexVisit[cur]--;
 }
 
-int CharChain::Loop::dpSolve(char head, char tail, char ban, Graph *rawGraph, int sccDistance[30][30],
+int CharChain::Loop::dpSolve(char head, char tail, Graph *rawGraph, int sccDistance[30][30],
                              int dp[], Edge *hostPreEdge[], int sccPreVertex[])
 {
     // 利用 weight 给 dpSolve 赋初值
@@ -567,11 +701,6 @@ int CharChain::Loop::dpSolve(char head, char tail, char ban, Graph *rawGraph, in
     {
         int x = head - 'a';
         dp[x] = weights[x];
-    }
-    // ban 掉的为负数
-    if (ban != 0)
-    {
-        dp[ban - 'a'] = -1;
     }
 
     // 对于 hostGraph 进行 topoSort 排序
@@ -818,5 +947,124 @@ bool CharChain::Loop::restoreSubChain(Graph *scc, int cur, int dest, int remain,
 int CharChain::NoLoop::mainSolution(char *words[], int wordsLen, char *result[],
                                     char head, char tail, char ban)
 {
-    return 0;
+    auto rawGraph = new Graph(words, wordsLen);
+    // 删除 ban 的单词
+    rawGraph->delBannedEdges(ban);
+
+    // 同样需要删去容易造成干扰的边
+    rawGraph->delSingleEdges();
+
+    // dp
+    int dp[MAX_VERTEX];
+    memset(dp, 255, sizeof(dp));
+    Edge* preEdge[MAX_VERTEX] = {nullptr};
+    int dest = dpSolve(head, tail, rawGraph, dp, preEdge);
+
+    // 复原链路
+    int resultLen = restoreChain(dest, preEdge, rawGraph, result);
+    delete rawGraph;
+    if (resultLen <= 1)
+    {
+        throw MyException(WORD_NOT_AVAILABLE);
+    }
+    return resultLen;
+}
+
+int CharChain::NoLoop::dpSolve(char head, char tail, Graph *rawGraph, int dp[], Edge* preEdge[])
+{
+    // 进行拓扑排序，有两个作用，一个是检测是否有环，另一个是确定 dp 顺序
+    int topo[MAX_VERTEX];
+    rawGraph->topoSort(ALPHA_SIZE, topo);
+
+    // 利用 head 和 ban 确定 dp 起始点，利用 weight 给 dpSolve 赋初值
+    const int *weights = rawGraph->getVertexCharWeights();
+    if (head == 0)
+    {
+        for (int i = 0; i < ALPHA_SIZE; i++)
+        {
+            dp[i] = weights[i];
+        }
+    }
+    else
+    {
+        int x = head - 'a';
+        dp[x] = weights[x];
+    }
+
+    // 按照 topo 序 dp
+    for (int i = 0; i < ALPHA_SIZE; i++)
+    {
+        int v = topo[i];
+        if (dp[v] >= 0)
+        {
+            for (auto& edge : rawGraph->getVertexEdges()[v])
+            {
+                int target = edge->getTarget();
+                // targetWeight 是需要考虑的，因为自环并不算是，但是两个自环需要排除
+                // TODO 问问助教
+                int targetWeight = rawGraph->getVertexCharWeight(v);
+                int edgeWeight = edge->getWeight();
+                if (dp[v] + targetWeight + edgeWeight > dp[target])
+                {
+                    dp[target] = dp[v] + targetWeight + edgeWeight;
+                    preEdge[target] = edge;
+                }
+            }
+        }
+    }
+
+    int dest = 0;
+    if (tail == 0)
+    {
+        for (int i = 1; i < ALPHA_SIZE; i++)
+        {
+            if (dp[i] > dp[dest])
+            {
+                dest = i;
+            }
+        }
+    }
+    else
+    {
+        dest = tail - 'a';
+    }
+
+    return dest;
+}
+
+int CharChain::NoLoop::restoreChain(int cur, Edge* preEdge[], Graph *rawGraph, char *result[])
+{
+    vector<char *> chain;
+    // 普通的 dp 回溯
+    while (preEdge[cur] != nullptr)
+    {
+        int curWeight = rawGraph->getVertexCharWeight(cur);
+        if (curWeight > 0)
+        {
+            for (auto *loop : rawGraph->getVertexSelfLoop()[cur])
+            {
+                chain.push_back(loop->getWord());
+            }
+        }
+
+        auto edge = preEdge[cur];
+        chain.push_back(edge->getWord());
+        cur = edge->getWord()[0] - 'a';
+    }
+
+    if (rawGraph->getVertexCharWeight(cur) > 0)
+    {
+        for (auto *loop : rawGraph->getVertexSelfLoop()[cur])
+        {
+            chain.push_back(loop->getWord());
+        }
+    }
+
+    int i = 0;
+    for (auto iter = chain.rbegin(); iter != chain.rend(); iter++)
+    {
+        result[i++] = *iter;
+    }
+
+    return (int) chain.size();
 }

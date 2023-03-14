@@ -52,8 +52,6 @@ private:
     list<Edge *> vertexEdges[MAX_VERTEX];
     // 记录每一个点的所有自环
     list<Edge *> vertexSelfLoop[MAX_VERTEX];
-    // 记录每一个点的出度
-    int inDegree[MAX_VERTEX] = {};
     // 记录每一个点的 word 权重
     int vertexWeight[MAX_VERTEX] = {};
     // 记录每一点的 char 权重
@@ -100,7 +98,11 @@ public:
      * 删掉“孤立边和自环”，因为在 CharWordLoop 中这种边有可能会导致最后的单词链只有一个单词，这与题义不符
      */
     void delSingleEdges();
-
+    /**
+     * 在进行正式处理之前，将所有的以 ban 开头的字母边都删掉
+     * @param ban
+     */
+    void delBannedEdges(char ban);
     Graph *getHostGraph() const;
     const int *getSccIndex() const;
     const list<Edge *> *getVertexEdges() const;

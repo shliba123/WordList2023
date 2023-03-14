@@ -34,11 +34,15 @@ int Edge::getIndex() const
 Graph::Graph(char **words, int wordsLen)
 {
     edgeNum = 0;
-    for (int i = 0; i < wordsLen; ++i) {
+    for (int i = 0; i < wordsLen; ++i)
+    {
         int len = (int)strlen(words[i]);
-        if (words[i][0] == words[i][len - 1]) {
+        if (words[i][0] == words[i][len - 1])
+        {
             addSelfLoop(words[i]);
-        } else {
+        }
+        else
+        {
             addEdge(words[i]);
         }
     }
@@ -69,7 +73,6 @@ void Graph::addEdge(int source, int target, char *word)
 {
     auto edge = new Edge(source, target, (int)strlen(word), edgeNum++, word);
     vertexEdges[source].push_back(edge);
-    inDegree[target]++;
 }
 void Graph::addEdge(char *word)
 {
@@ -78,7 +81,6 @@ void Graph::addEdge(char *word)
     int target = (int)word[wordLen - 1] - 'a';
     auto edge = new Edge(source, target, wordLen, edgeNum++, word);
     vertexEdges[source].push_back(edge);
-    inDegree[target]++;
 }
 void Graph::addSelfLoop(char *word)
 {
@@ -114,7 +116,7 @@ void Graph::compressGraph()
     // 为 hostGraph 和 scc 加边
     for (int v = 0; v < ALPHA_SIZE; v++)
     {
-        for (auto& edge : vertexEdges[v])
+        for (auto &edge : vertexEdges[v])
         {
             int target = edge->getTarget();
             // 如果在同一个 scc 中，则给 scc 加边
@@ -132,7 +134,7 @@ void Graph::compressGraph()
     // 一模一样的逻辑，针对自环，只不过自环只会出现在 scc 中
     for (int v = 0; v < ALPHA_SIZE; v++)
     {
-        for (auto& edge : vertexSelfLoop[v])
+        for (auto &edge : vertexSelfLoop[v])
         {
             sccs[sccIndex[v]]->addSelfLoop(edge->getWord());
         }
@@ -157,7 +159,7 @@ void Graph::tarjan(int v, bool *visit, bool *inStack, int *low, int *dfn, int *s
     stack[++top] = v;
 
     visit[v] = inStack[v] = true;
-    for (auto& edge : vertexEdges[v])
+    for (auto &edge : vertexEdges[v])
     {
         int target = edge->getTarget();
         if (!visit[target])
@@ -176,10 +178,11 @@ void Graph::tarjan(int v, bool *visit, bool *inStack, int *low, int *dfn, int *s
     if (low[v] == dfn[v])
     {
         // 这里进行弹栈
-        do {
+        do
+        {
             topVertex = stack[top--];
             inStack[topVertex] = false;
-            sccIndex[topVertex] = (int) sccs.size();
+            sccIndex[topVertex] = (int)sccs.size();
         } while (low[topVertex] != dfn[topVertex]);
         // 这里为刚才弹栈的点新建一个图
         auto *scc = new Graph({}, 0);
@@ -188,13 +191,19 @@ void Graph::tarjan(int v, bool *visit, bool *inStack, int *low, int *dfn, int *s
 }
 void Graph::topoSort(int vertexNum, int *ans)
 {
-    int degree[ALPHA_SIZE];
+    int degree[ALPHA_SIZE] = {};
     int head = 0, tail = 0;
-    // 复制入度，因为之后会对于 degree 进行操作
-    for (int i = 0; i < vertexNum; ++i)
+
+    // 更新获得所有的入度
+    for (int i = 0; i < ALPHA_SIZE; i++)
     {
-        degree[i] = inDegree[i];
+        for (auto &edge : vertexEdges[i])
+        {
+            int target = edge->getTarget();
+            degree[target]++;
+        }
     }
+
     // 遍历所有的节点，应该是 26 个
     for (int i = 0; i < vertexNum; ++i)
     {
@@ -235,7 +244,7 @@ void Graph::delSingleEdges()
     // 更新获得所有的出入度
     for (int i = 0; i < ALPHA_SIZE; i++)
     {
-        for (auto& edge : vertexEdges[i])
+        for (auto &edge : vertexEdges[i])
         {
             int source = edge->getSource();
             int target = edge->getTarget();
@@ -286,6 +295,15 @@ void Graph::delSingleEdges()
     }
 }
 
+void Graph::delBannedEdges(char ban)
+{
+    if (ban != 0)
+    {
+        vertexEdges[ban - 'a'].clear();
+        vertexSelfLoop[ban - 'a'].clear();
+    }
+}
+
 Graph *Graph::getHostGraph() const
 {
     return hostGraph;
@@ -297,7 +315,7 @@ const vector<Graph *> &Graph::getSccs() const
 
 int Graph::getSccsNum() const
 {
-    return (int) sccs.size();
+    return (int)sccs.size();
 }
 const int *Graph::getSccIndex() const
 {
