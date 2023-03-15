@@ -141,16 +141,13 @@ void WordChain::Loop::getSccDistance(Graph *rawGraph, int sccDistance[][MAX_VERT
     // 打印 sccDistance 表格
 #ifdef DEBUG
     printf("    ");
-    for (int i = 0; i < ALPHA_SIZE; i++)
-    {
+    for (int i = 0; i < ALPHA_SIZE; i++) {
         printf("%4c", i + 'a');
     }
     cout << endl;
-    for (int i = 0; i < ALPHA_SIZE; i++)
-    {
+    for (int i = 0; i < ALPHA_SIZE; i++) {
         printf("%4c", i + 'a');
-        for (int j = 0; j < ALPHA_SIZE; j++)
-        {
+        for (int j = 0; j < ALPHA_SIZE; j++) {
             printf("%4d", sccDistance[i][j]);
         }
         cout << endl;
@@ -270,7 +267,7 @@ int WordChain::Loop::dpSolve(char head, char tail, Graph *rawGraph, int sccDista
     for (int o = 0; o < ALPHA_SIZE; o++)
         printf("%4d", dp[o]);
     cout << endl;
-    cout << "destination point: " << (char)(ans + 'a') << endl;
+    cout << "destination point: " << (char) (ans + 'a') << endl;
 #endif
     if (dp[ans] <= 1) {
         throw MyException(WORD_NOT_AVAILABLE);
@@ -460,6 +457,16 @@ int WordChain::NoLoop::dpSolve(char head, char tail, Graph *rawGraph, int dp[], 
     } else {
         dest = tail - 'a';
     }
+#ifdef DEBUG
+    cout << "dp" << endl;
+    for (int o = 0; o < ALPHA_SIZE; o++)
+        printf("%4c", o + 'a');
+    cout << endl;
+    for (int o = 0; o < ALPHA_SIZE; o++)
+        printf("%4d", dp[o]);
+    cout << endl;
+    cout << "destination point: " << (char) (dest + 'a') << endl;
+#endif
 
     return dest;
 }
@@ -558,16 +565,13 @@ void CharChain::Loop::getSccDistance(Graph *rawGraph, int sccDistance[][MAX_VERT
     // 打印 sccDistance 表格
 #ifdef DEBUG
     printf("    ");
-    for (int i = 0; i < ALPHA_SIZE; i++)
-    {
+    for (int i = 0; i < ALPHA_SIZE; i++) {
         printf("%4c", i + 'a');
     }
     cout << endl;
-    for (int i = 0; i < ALPHA_SIZE; i++)
-    {
+    for (int i = 0; i < ALPHA_SIZE; i++) {
         printf("%4c", i + 'a');
-        for (int j = 0; j < ALPHA_SIZE; j++)
-        {
+        for (int j = 0; j < ALPHA_SIZE; j++) {
             printf("%4d", sccDistance[i][j]);
         }
         cout << endl;
@@ -691,7 +695,7 @@ int CharChain::Loop::dpSolve(char head, char tail, Graph *rawGraph, int sccDista
     for (int o = 0; o < ALPHA_SIZE; o++)
         printf("%4d", dp[o]);
     cout << endl;
-    cout << "destination point: " << (char)(ans + 'a') << endl;
+    cout << "destination point: " << (char) (ans + 'a') << endl;
 #endif
     return ans;
 }
@@ -828,7 +832,6 @@ int CharChain::NoLoop::mainSolution(char *words[], int wordsLen, char *result[],
     memset(dp, 255, sizeof(dp));
     Edge *preEdge[MAX_VERTEX] = {nullptr};
     int dest = dpSolve(head, tail, rawGraph, dp, preEdge);
-
     // 复原链路
     int resultLen = restoreChain(dest, preEdge, rawGraph, result);
     delete rawGraph;
