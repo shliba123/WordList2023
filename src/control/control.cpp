@@ -4,6 +4,7 @@
 #include "iostream"
 #include "control.h"
 #include "io.h"
+#include <fstream>
 #include "../core/core.h"
 
 char* words[MAX_WORD];
@@ -26,11 +27,11 @@ void control(int argc, char *argv[])
         int wordsLen = readWords(path, words);
 
         int resultLen = 0;
-        int chainCnt = 0;
         // 选择问题
         switch (problemType)
         {
         case COUNT_CHAINS:
+            resultLen = countChains(words, wordsLen, result);
             break;
         case MAX_CHAIN_WORD:
             resultLen = getLongestWordChain(words, wordsLen, result, head, tail, ban, allowLoop);
@@ -40,6 +41,16 @@ void control(int argc, char *argv[])
             break;
         default:
             break;
+        }
+
+        if (problemType == COUNT_CHAINS)
+        {
+            std::ofstream solutionFile;
+            solutionFile.open("solution.txt");
+            for (int i = 0; i < resultLen; i++)
+            {
+                solutionFile << result[i] << endl;
+            }
         }
 
         for (int i = 0; i < resultLen; i++)
