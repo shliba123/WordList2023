@@ -7,6 +7,7 @@
 
 #include "parse.h"
 #include "unordered_set"
+#include "cstdio"
 
 /**
  * 从文件中读取单词

@@ -7,13 +7,11 @@
 #include <fstream>
 #include "../core/core.h"
 
-char* words[MAX_WORD];
-char* result[MAX_WORD];
+char *words[MAX_WORD];
+char *result[MAX_WORD];
 
-void control(int argc, char *argv[])
-{
-    try
-    {
+void control(int argc, char *argv[]) {
+    try {
         // 解析参数
         auto ans = parseParam(argc, argv);
         int problemType = get<0>(ans);
@@ -58,8 +56,7 @@ void control(int argc, char *argv[])
             cout << result[i] << endl;
         }
     }
-    catch (MyException &e)
-    {
+    catch (MyException &e) {
         cerr << e.what();
     }
 }

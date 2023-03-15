@@ -1,17 +1,18 @@
 //
 // Created by thysrael on 23-3-8.
 //
-#include "cstdio"
+
 #include "io.h"
+
 int readWords(char *inputFilePath, char *words[]) {
-    FILE * file;
-    file = fopen( inputFilePath, "rb");
+    FILE *file;
+    file = fopen(inputFilePath, "rb");
     if (file == nullptr) {
         throw MyException(FILE_NOT_FIND);
     }
     fseek(file, 0, SEEK_END);
-    int len = (int)ftell(file);
-    auto context = (char*)malloc(len + 1);
+    int len = (int) ftell(file);
+    auto context = (char *) malloc(len + 1);
     fseek(file, 0, SEEK_SET);
     auto readLen = fread(context, 1, (size_t) len + 1, file);
     context[readLen] = '\0';
