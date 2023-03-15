@@ -40,30 +40,16 @@
      <string>选择文件</string>
     </property>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>420</x>
       <y>90</y>
-      <width>192</width>
+      <width>205</width>
       <height>301</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout">
-     <item row="5" column="1">
-      <widget class="QToolButton" name="toolButton_2">
-       <property name="text">
-        <string>查询最长字母数链</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="label_4">
-       <property name="text">
-        <string>选择尾字母为</string>
-       </property>
-      </widget>
-     </item>
      <item row="1" column="0">
       <widget class="QLabel" name="label_3">
        <property name="text">
@@ -71,17 +57,17 @@
        </property>
       </widget>
      </item>
-     <item row="4" column="1">
-      <widget class="QToolButton" name="toolButton">
+     <item row="0" column="0">
+      <widget class="QLabel" name="label_7">
        <property name="text">
-        <string>查询最长单词数链</string>
+        <string>是否含有环</string>
        </property>
       </widget>
      </item>
-     <item row="3" column="1">
-      <widget class="QToolButton" name="toolButton_3">
+     <item row="5" column="1">
+      <widget class="QToolButton" name="toolButton">
        <property name="text">
-        <string>查询所有单词链</string>
+        <string>查询最长单词数链</string>
        </property>
       </widget>
      </item>
@@ -224,10 +210,38 @@
        </item>
       </widget>
      </item>
-     <item row="0" column="0">
-      <widget class="QLabel" name="label_7">
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_4">
        <property name="text">
-        <string>是否含有环</string>
+        <string>选择尾字母为</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QComboBox" name="comboBox_5">
+       <item>
+        <property name="text">
+         <string>否</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>是</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="6" column="1">
+      <widget class="QToolButton" name="toolButton_2">
+       <property name="text">
+        <string>查询最长字母数链</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="QToolButton" name="toolButton_3">
+       <property name="text">
+        <string>查询所有单词链</string>
        </property>
       </widget>
      </item>
@@ -370,23 +384,155 @@
        </item>
       </widget>
      </item>
-     <item row="0" column="1">
-      <widget class="QComboBox" name="comboBox_5">
+     <item row="3" column="1">
+      <widget class="QComboBox" name="comboBox_3">
        <item>
         <property name="text">
-         <string>否</string>
+         <string>None</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>是</string>
+         <string>a</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>b</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>c</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>d</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>e</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>f</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>g</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>h</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>i</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>j</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>k</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>l</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>m</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>n</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>o</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>p</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>q</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>r</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>s</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>t</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>u</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>v</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>w</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>x</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>y</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>z</string>
         </property>
        </item>
       </widget>
      </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="label_5">
+       <property name="text">
+        <string>禁用的首字母为</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>60</x>
