@@ -6,20 +6,16 @@
 #include <string>
 #include "core.h"
 
-void saveChain(int &chainCount, char *result[], vector<char *> &chain)
-{
+void saveChain(int &chainCount, char *result[], vector<char *> &chain) {
     int resultLen = 0;
-    for (const auto &word : chain)
-    {
+    for (const auto &word: chain) {
         resultLen += (int) strlen(word) + 1;
     }
     char *resultChain = (char *) malloc(resultLen);
     int i = 0;
-    for (const auto &word : chain)
-    {
+    for (const auto &word: chain) {
         int len = (int) strlen(word);
-        for (int j = 0; j < len; j++)
-        {
+        for (int j = 0; j < len; j++) {
             resultChain[i++] = word[j];
         }
         resultChain[i++] = ' ';
@@ -117,7 +113,7 @@ int WordChain::Loop::mainSolution(char *words[], int wordsLen, char *result[],
 
     // 根据 dest 和两个 pre 数组还原路径
     int resultLen = restoreChain(dest, hostPreEdge, sccPreVertex, rawGraph, sccDistance, result);
-    // delete rawGraph;
+    delete rawGraph;
     return resultLen;
 }
 
@@ -414,8 +410,7 @@ int WordChain::NoLoop::mainSolution(char *words[], int wordsLen, char *result[],
     // 复原链路
     int resultLen = restoreChain(dest, preEdge, rawGraph, result);
     // delete rawGraph;
-    if (resultLen <= 1)
-    {
+    if (resultLen <= 1) {
         throw MyException(WORD_NOT_AVAILABLE);
     }
     return resultLen;
@@ -842,8 +837,7 @@ int CharChain::NoLoop::mainSolution(char *words[], int wordsLen, char *result[],
     int resultLen = restoreChain(dest, preEdge, rawGraph, result);
 
     // delete rawGraph;
-    if (resultLen <= 1)
-    {
+    if (resultLen <= 1) {
         throw MyException(WORD_NOT_AVAILABLE);
     }
     return resultLen;

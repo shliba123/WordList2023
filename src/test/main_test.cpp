@@ -24,33 +24,12 @@ void testCountChains(char *words[], int len, char *ans[], int ans_len) {
 void testgetLongestWordChain(char *words[], int len, char *ans[], int ans_len, char head, char tail, char ban,
                              bool allowLoop) {
     char **result = (char **) malloc(10000);
-
-    int out_len = getLongestWordChain(words, len, result, head, tail, ban, allowLoop);
-    for (int i = 0; i < out_len; ++i) {
-        std::cout << result[i] << std::endl;
+    int out_len = 0;
+    try {
+        out_len = getLongestWordChain(words, len, result, head, tail, ban, allowLoop);
+    } catch (MyException &e) {
+        std::cerr << e.what() << endl;
     }
-    std::cout << endl;
-    for (int i = 0; i < ans_len; ++i) {
-        std::cout << ans[i] << std::endl;
-    }
-    ASSERT_TRUE(ans_len == out_len);
-
-    std::sort(result, result + out_len, [](char *
-    p, char *q) { return strcmp(p, q) < 0; });
-
-    std::sort(ans, ans + ans_len, [](char *
-    p, char *q) { return strcmp(p, q) < 0; });
-//
-//    for (int i = 0; i < ans_len; i++) {
-//        if (result != nullptr) ASSERT_TRUE(strcmp(ans[i], result[i]) == 0);
-//    }
-}
-
-void testgetLongestCharChain(char *words[], int len, char *ans[], int ans_len, char head, char tail,
-                             char ban, bool allowLoop) {
-    char **result = (char **) malloc(10000);
-
-    int out_len = getLongestCharChain(words, len, result, head, tail, ban, allowLoop);
 //    for (int i = 0; i < out_len; ++i) {
 //        std::cout << result[i] << std::endl;
 //    }
@@ -69,6 +48,35 @@ void testgetLongestCharChain(char *words[], int len, char *ans[], int ans_len, c
 //    for (int i = 0; i < ans_len; i++) {
 //        if (result != nullptr) ASSERT_TRUE(strcmp(ans[i], result[i]) == 0);
 //    }
+}
+
+void testgetLongestCharChain(char *words[], int len, char *ans[], int ans_len, char head, char tail,
+                             char ban, bool allowLoop) {
+    char **result = (char **) malloc(10000);
+    int out_len = 0;
+    try {
+        out_len = getLongestCharChain(words, len, result, head, tail, ban, allowLoop);
+    } catch (MyException &e) {
+        std::cerr << e.what();
+    }
+    for (int i = 0; i < out_len; ++i) {
+        std::cout << result[i] << std::endl;
+    }
+    std::cout << endl;
+    for (int i = 0; i < ans_len; ++i) {
+        std::cout << ans[i] << std::endl;
+    }
+    ASSERT_TRUE(ans_len == out_len);
+
+    std::sort(result, result + out_len, [](char *
+    p, char *q) { return strcmp(p, q) < 0; });
+
+    std::sort(ans, ans + ans_len, [](char *
+    p, char *q) { return strcmp(p, q) < 0; });
+//
+    for (int i = 0; i < ans_len; i++) {
+        if (result != nullptr) ASSERT_TRUE(strcmp(ans[i], result[i]) == 0);
+    }
 }
 
 
@@ -137,10 +145,40 @@ TEST(getLongestWordChain, simple_chain_and_single_character_h_t) {
     testgetLongestWordChain(words, 10, ans, 10, 'a', 'a', 0, true);
 }
 
+TEST(getLongestWordChain, single_word) {
+    char *words[] = {"aaa"};
+    char *ans[] = {};
+    testgetLongestWordChain(words, 1, ans, 0, 'a', 'a', 0, true);
+}
+
+TEST(getLongestWordChain, single_word_no_loop) {
+    char *words[] = {"aaa"};
+    char *ans[] = {};
+    testgetLongestWordChain(words, 1, ans, 0, 'a', 'a', 0, false);
+}
+
+TEST(getLongestCharChain, single_word_no_loop) {
+    char *words[] = {"aaa"};
+    char *ans[] = {};
+    testgetLongestCharChain(words, 1, ans, 0, 'a', 'a', 0, false);
+}
+
+TEST(getLongestCharChain, single_word) {
+    char *words[] = {"aaa"};
+    char *ans[] = {};
+    testgetLongestCharChain(words, 1, ans, 0, 'a', 'a', 0, true);
+}
+
 TEST(getLongestCharChain, r) {
     char *words[] = {"element", "heaven", "table", "teach", "talk"};
-    char *ans[] = {"algebra", "apple", "elephant", "trick"};
+    char *ans[] = {"table", "element", "teach", "heaven"};
     testgetLongestCharChain(words, 5, ans, 4, 0, 0, 0, true);
+}
+
+TEST(getLongestCharChain, c) {
+    char *words[] = {"element", "heaven", "teach", "talk"};
+    char *ans[] = {"element", "teach", "heaven"};
+    testgetLongestCharChain(words, 4, ans, 3, 0, 0, 0, false);
 }
 
 TEST(getLongestChariChain, h) {
@@ -150,11 +188,18 @@ TEST(getLongestChariChain, h) {
     testgetLongestCharChain(words, 11, ans, 2, 'p', 'n', 0, false);
 }
 
-TEST(getLongestChariChain, h_t_loop) {
+TEST(getLongestCharChain, h_t_loop) {
     char *words[] = {"algebra", "apple", "zoo", "elephant", "under", "fox", "dog", "moon", "leaf", "trick",
                      "pseudopseudohypoparathyroidism"};
     char *ans[] = {"pseudopseudohypoparathyroidism", "moon"};
     testgetLongestCharChain(words, 11, ans, 2, 'p', 'n', 0, true);
+}
+
+TEST(getLongestCharChain, h_t_loop_1) {
+    char *words[] = {"algebra", "apple", "zoo", "elephant", "under", "fox", "dog", "moon", "leaf", "trick",
+                     "pseudopseudohypoparathyroidism"};
+    char *ans[] = {"pseudopseudohypoparathyroidism", "moon"};
+    testgetLongestCharChain(words, 11, ans, 2, 'p', 'n', 0, false);
 }
 
 

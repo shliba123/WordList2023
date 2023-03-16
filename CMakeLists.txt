@@ -18,7 +18,7 @@ add_executable(WordList2023
 
 
 target_link_libraries(WordList2023 gtest gtest_main)
-target_link_libraries(${PROJECT_NAME} profiler unwind)
+#target_link_libraries(${PROJECT_NAME} profiler unwind)
 #add_executable(gtest01 src/main_test.cpp)
 #
 #target_link_libraries(gtest01 gtest gtest_main)
