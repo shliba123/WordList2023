@@ -140,16 +140,16 @@ void MainWindow::on_toolButton_3_clicked()
     try {
         int chainLen = countChains(words, wordLen, result);
         bool allowLoop = getAllowLoop(ui->comboBox_5->currentText());
-        if (allowLoop) {
-            throw MyException(N_WORK_WITH_OTHER_PARAMETER);
-        }
+//        if (allowLoop) {
+//            throw MyException(N_WORK_WITH_OTHER_PARAMETER);
+//        }
         QString qResult;
         for (int var = 0; var < chainLen; ++var) {
             qResult += result[var];
             qResult += "\n";
         }
         ui->textEdit->setText(qResult);
-    } catch(MyException &e) {
+    } catch(std::exception &e) {
         exceptionHandler(e.what());
     }
 
@@ -171,9 +171,9 @@ void MainWindow::on_toolButton_clicked()
         int tail = getFlag(ui->comboBox->currentText());
         int ban = getFlag(ui->comboBox_3->currentText());
         int allowLoop = getAllowLoop(ui->comboBox_5->currentText());
-        if (ban == head) {
-            throw MyException(WORD_NOT_AVAILABLE);
-        }
+//        if (ban == head) {
+//            throw MyException(WORD_NOT_AVAILABLE);
+//        }
         int  resultLen = getLongestWordChain(words, wordLen, result, head, tail, ban, allowLoop);
         QString qResult;
         for (int var = 0; var < resultLen; ++var) {
@@ -182,7 +182,7 @@ void MainWindow::on_toolButton_clicked()
             qResult += "\n";
         }
         ui->textEdit->setText(qResult);
-    } catch(MyException &e) {
+    } catch(std::exception &e) {
         exceptionHandler(e.what());
     }
 
@@ -199,9 +199,9 @@ void MainWindow::on_toolButton_2_clicked()
         int tail = getFlag(ui->comboBox->currentText());
         int ban = getFlag(ui->comboBox_3->currentText());
         int allowLoop = getAllowLoop(ui->comboBox_5->currentText());
-        if (ban == head) {
-            throw MyException(WORD_NOT_AVAILABLE);
-        }
+//        if (ban == head) {
+//            throw MyException(WORD_NOT_AVAILABLE);
+//        }
         int  resultLen = getLongestCharChain(words, wordLen, result, head, tail, ban, allowLoop);
         QString qResult;
         for (int var = 0; var < resultLen; ++var) {
@@ -210,7 +210,7 @@ void MainWindow::on_toolButton_2_clicked()
             qResult += "\n";
         }
         ui->textEdit->setText(qResult);
-    } catch(MyException &e) {
+    } catch(std::exception &e) {
         exceptionHandler(e.what());
     }
 }

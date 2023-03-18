@@ -17,6 +17,8 @@ int main(int argc, char *argv[]) {
 #else
 
     control(argc, argv);
+
+
     ::testing::InitGoogleTest();
 #endif
     return RUN_ALL_TESTS();
