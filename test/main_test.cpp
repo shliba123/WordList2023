@@ -2,7 +2,7 @@
 // Created by shliba on 2023/3/10.
 //
 #include "gtest/gtest.h"
-#include "../core/core.h"
+#include "../src/core/core.h"
 
 void testCountChains(char *words[], int len, char *ans[], int ans_len) {
     char **result = (char **) malloc(10000);

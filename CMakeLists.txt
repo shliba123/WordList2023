@@ -14,7 +14,7 @@ include_directories(googletest/include
 
 
 add_executable(WordList2023
-        ${DIR_SRC} ${HDR_SRC})
+        ${DIR_SRC} ${HDR_SRC} test/main_test.cpp)
 
 
 target_link_libraries(WordList2023 gtest gtest_main)

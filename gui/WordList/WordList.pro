@@ -25,7 +25,10 @@ FORMS += \
     mainwindow.ui
 
 
-macx: LIBS += -L$$PWD/./ -luntitled13
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/./release/ -lWordList
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/./debug/ -lWordList
+else:unix: LIBS += -L$$PWD/./ -lWordList
 
 INCLUDEPATH += $$PWD/.
 DEPENDPATH += $$PWD/.
