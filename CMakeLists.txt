@@ -16,8 +16,11 @@ include_directories(googletest/include
 add_executable(WordList2023
         ${DIR_SRC} ${HDR_SRC} test/main_test.cpp)
 
-
 target_link_libraries(WordList2023 gtest gtest_main)
+
+add_library(WordList2023Shd SHARED src/core/core.cpp src/core/graph.cpp src/control/control.cpp
+        src/control/io.cpp src/control/parse.cpp src/control/util.cpp)
+
 #target_link_libraries(${PROJECT_NAME} profiler unwind)
 #add_executable(gtest01 src/main_test.cpp)
 #
